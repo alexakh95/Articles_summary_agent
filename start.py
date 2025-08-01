@@ -1,8 +1,9 @@
 
 from bs4 import BeautifulSoup
+import os
 import requests
 
-SERP_API_KEY = 'facc9e1066f2d66d7c9c0ce27cd18893de867fa023a57a464bd1eb3d7b0f3418'
+SERP_API_KEY = os.getenv("SERP_API_KEY")
 class Article_extraction():
     """
     This class facilitates the extraction of articles from various websites, focusing on specific topics based on provided keywords.
