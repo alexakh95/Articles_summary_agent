@@ -14,12 +14,14 @@ API_KEY = os.getenv("OPENAI_API_KEY")
     
          
 class Agent():
-    def __init__(self,model, API_KEY, key_words = None, instruction = "", agent_name = ""):
+    def __init__(self,model, API_KEY, articles_file = 'articles_history.json',key_words = None, instruction = "", agent_name = ""):
         self.model = model
         self.API_KEY = API_KEY
         self.key_words = key_words
         self.instruction = instruction
         self.agent_name = agent_name
+        self.articles_file = articles_file
+        
         
     
     def agent_initializing(self):
@@ -84,9 +86,31 @@ class Agent():
                 
         return response.output[0].content[0].text
     
-    def parse_response(self, response):
-        """_summary_
+    
+    def save_recommendation_to_file(self, article ):
+        """
 
+        Args:
+            file_name (JSON structure):  Defaults to 'articles_history.json', file that stores
+            the previous read list articles.
+            article (str): article's detaitls
+        """
+        
+        try:
+            with open(self.articles_file, 'r') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            print("Error: File not found.")
+            return None 
+        
+        data.append(article)
+        
+        with open(self.articles_file, 'w') as file:
+            json.dump(data, file, indent=4)
+            
+        
+    def parse_response(self, response):
+        """
         Args:
             response (str): text is the response from LLM with XML tags
 
@@ -96,27 +120,6 @@ class Agent():
         return json.dumps(xmltodict.parse(response, indent=4))
         
                              
-                
-
-        
-        
-        
-
-
-                    
-
-                    
-
-                    
-        
-        
-    
-urls = "https://serpapi.com/search"
-
-articles = Article_extraction(urls=urls)
-
-#lets get the data from each web_site save it and then will move using a prompt 
-articles.get_data_from_pdf(filename='articles.txt')
 
 
 
